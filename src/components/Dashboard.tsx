@@ -20,13 +20,15 @@ import {
   Cell
 } from 'recharts';
 
-export default function Dashboard() {
+export default function Dashboard({ onNavigate }: { onNavigate: (tab: string) => void }) {
   const [stats, setStats] = useState({
     employees: 0,
     presentToday: 0,
     leaveRequests: 0,
     departments: 0
   });
+
+  const [activeEmployees, setActiveEmployees] = useState<{name: string, pfp: string}[]>([]);
 
   useEffect(() => {
     async function fetchStats() {
@@ -35,6 +37,18 @@ export default function Dashboard() {
       const leaveSnap = await getDocs(query(collection(db, 'leave_requests'), where('status', '==', 'pending')));
       const today = new Date().toISOString().split('T')[0];
       const attSnap = await getDocs(query(collection(db, 'attendance'), where('date', '==', today)));
+
+      // Fetch actual names for active members
+      const activeIds = attSnap.docs.map(d => d.data().employeeId);
+      const employeesMap = new Map();
+      empSnap.docs.forEach(d => employeesMap.set(d.id, d.data().name));
+      
+      const activeList = activeIds.slice(0, 5).map(id => ({
+        name: employeesMap.get(id) || 'Unknown Member',
+        pfp: (employeesMap.get(id) || 'U').charAt(0)
+      }));
+
+      setActiveEmployees(activeList);
 
       setStats({
         employees: empSnap.size,
@@ -116,28 +130,38 @@ export default function Dashboard() {
       <div className="bento-card row-span-2">
         <div className="card-title">Active Now</div>
         <div className="flex-1 space-y-4">
-          {[1, 2, 3, 4].map((i) => (
+          {activeEmployees.length > 0 ? activeEmployees.map((emp, i) => (
             <div key={i} className="flex items-center space-x-3 pb-3 border-b border-[#F3F4F6] last:border-0 last:pb-0">
               <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs ring-2 ring-white">
-                {String.fromCharCode(64 + i)}
+                {emp.pfp}
               </div>
               <div className="overflow-hidden">
-                <div className="text-[13px] font-semibold truncate">Employee {i}</div>
+                <div className="text-[13px] font-semibold truncate">{emp.name}</div>
                 <div className="text-[11px] text-[#6B7280] truncate">Active Today</div>
               </div>
             </div>
-          ))}
+          )) : (
+            <div className="flex flex-col items-center justify-center h-full text-center space-y-2 opacity-40 py-10">
+              <UserCheck className="w-8 h-8" />
+              <p className="text-[11px] font-bold uppercase tracking-widest leading-tight">No active<br/>members today</p>
+            </div>
+          )}
         </div>
-        <button className="mt-auto text-center py-2 text-[12px] text-[#2563EB] font-bold uppercase tracking-widest hover:underline">
-          View all active
-        </button>
+        {activeEmployees.length > 0 && (
+          <button className="mt-auto text-center py-2 text-[12px] text-[#2563EB] font-bold uppercase tracking-widest hover:underline">
+            View all active
+          </button>
+        )}
       </div>
 
       {/* Quick Actions - spans 2x1 */}
       <div className="bento-card col-span-2">
         <div className="card-title">Quick Actions</div>
         <div className="grid grid-cols-3 gap-3">
-          <button className="bg-[#2563EB] text-white py-3 rounded-xl text-[12px] font-bold hover:bg-blue-700 transition-colors shadow-sm">
+          <button 
+            onClick={() => onNavigate('employees')}
+            className="bg-[#2563EB] text-white py-3 rounded-xl text-[12px] font-bold hover:bg-blue-700 transition-colors shadow-sm"
+          >
             Add Employee
           </button>
           <button className="bg-[#F3F4F6] text-[#111827] py-3 rounded-xl text-[12px] font-bold hover:bg-gray-200 transition-colors">

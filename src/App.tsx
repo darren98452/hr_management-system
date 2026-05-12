@@ -28,12 +28,12 @@ function AppContent() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'dashboard': return <Dashboard />;
+      case 'dashboard': return <Dashboard onNavigate={setActiveTab} />;
       case 'employees': return <EmployeeList />;
       case 'departments': return <DepartmentList />;
       case 'attendance': return <Attendance />;
       case 'leaves': return <LeaveRequests />;
-      default: return <Dashboard />;
+      default: return <Dashboard onNavigate={setActiveTab} />;
     }
   };
 

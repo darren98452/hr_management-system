@@ -95,6 +95,18 @@ export default function Layout({ children, activeTab, setActiveTab }: LayoutProp
               <span>{item.label}</span>
             </button>
           ))}
+          
+          {profile?.role === 'admin' && (
+            <div className="pt-4 px-2">
+              <button
+                onClick={() => setActiveTab('employees')}
+                className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-[#111827] text-white rounded-xl text-[13px] font-bold hover:bg-[#1F2937] transition-all shadow-lg active:scale-95"
+              >
+                <Users className="w-4 h-4" />
+                <span>Quick Onboard</span>
+              </button>
+            </div>
+          )}
         </nav>
 
         <div className="p-4 border-t border-[#F3F4F6]">
