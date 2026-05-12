@@ -214,7 +214,10 @@ export default function Layout({ children, activeTab, setActiveTab }: LayoutProp
             <button className="text-gray-400 hover:text-gray-900 transition-colors">
               <Bell className="w-5 h-5" />
             </button>
-            <div className="flex items-center space-x-3 pl-6 border-l border-gray-100">
+            <button 
+              onClick={() => setActiveTab('profile')}
+              className="flex items-center space-x-3 pl-6 border-l border-gray-100 hover:opacity-80 transition-opacity"
+            >
               <div className="text-right">
                 <div className="text-sm font-semibold">{profile?.email?.split('@')[0]}</div>
                 <div className="text-[11px] font-medium text-gray-500 capitalize">{profile?.role}</div>
@@ -222,7 +225,7 @@ export default function Layout({ children, activeTab, setActiveTab }: LayoutProp
               <div className="w-8 h-8 rounded-full bg-[#2563EB] flex items-center justify-center text-white text-xs font-bold ring-2 ring-blue-50">
                 {profile?.email?.[0].toUpperCase()}
               </div>
-            </div>
+            </button>
           </div>
         </header>
 

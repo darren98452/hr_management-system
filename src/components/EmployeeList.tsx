@@ -20,7 +20,7 @@ import { cn } from '../lib/utils';
 import { useAuth } from '../hooks/useAuth';
 import { format } from 'date-fns';
 
-export default function EmployeeList() {
+export default function EmployeeList({ defaultShowAdd }: { defaultShowAdd?: boolean }) {
   const { profile } = useAuth();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
@@ -28,8 +28,12 @@ export default function EmployeeList() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | EmployeeStatus>('all');
   const [deptFilter, setDeptFilter] = useState<string>('all');
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(defaultShowAdd || false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+
+  useEffect(() => {
+    if (defaultShowAdd) setShowAddModal(true);
+  }, [defaultShowAdd]);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState<Partial<Employee>>({});
   const [activeMenu, setActiveMenu] = useState<string | null>(null);

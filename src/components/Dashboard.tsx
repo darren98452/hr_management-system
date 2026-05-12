@@ -20,7 +20,7 @@ import {
   Cell
 } from 'recharts';
 
-export default function Dashboard({ onNavigate }: { onNavigate: (tab: string) => void }) {
+export default function Dashboard({ onNavigate, onAction }: { onNavigate: (tab: string) => void, onAction: (action: string) => void }) {
   const [stats, setStats] = useState({
     employees: 0,
     presentToday: 0,
@@ -148,7 +148,10 @@ export default function Dashboard({ onNavigate }: { onNavigate: (tab: string) =>
           )}
         </div>
         {activeEmployees.length > 0 && (
-          <button className="mt-auto text-center py-2 text-[12px] text-[#2563EB] font-bold uppercase tracking-widest hover:underline">
+          <button 
+            onClick={() => onNavigate('attendance')}
+            className="mt-auto text-center py-2 text-[12px] text-[#2563EB] font-bold uppercase tracking-widest hover:underline"
+          >
             View all active
           </button>
         )}
@@ -159,16 +162,22 @@ export default function Dashboard({ onNavigate }: { onNavigate: (tab: string) =>
         <div className="card-title">Quick Actions</div>
         <div className="grid grid-cols-3 gap-3">
           <button 
-            onClick={() => onNavigate('employees')}
+            onClick={() => onAction('add-employee')}
             className="bg-[#2563EB] text-white py-3 rounded-xl text-[12px] font-bold hover:bg-blue-700 transition-colors shadow-sm"
           >
             Add Employee
           </button>
-          <button className="bg-[#F3F4F6] text-[#111827] py-3 rounded-xl text-[12px] font-bold hover:bg-gray-200 transition-colors">
-            Run Payroll
+          <button 
+            onClick={() => onNavigate('departments')}
+            className="bg-[#F3F4F6] text-[#111827] py-3 rounded-xl text-[12px] font-bold hover:bg-gray-200 transition-colors"
+          >
+            Create Unit
           </button>
-          <button className="bg-[#F3F4F6] text-[#111827] py-3 rounded-xl text-[12px] font-bold hover:bg-gray-200 transition-colors">
-            Export Report
+          <button 
+            onClick={() => onNavigate('attendance')}
+            className="bg-[#F3F4F6] text-[#111827] py-3 rounded-xl text-[12px] font-bold hover:bg-gray-200 transition-colors"
+          >
+            Mark Daily
           </button>
         </div>
       </div>
@@ -185,6 +194,12 @@ export default function Dashboard({ onNavigate }: { onNavigate: (tab: string) =>
             <div className="w-2 h-2 rounded-full bg-[#10B981]" />
             <span className="text-[14px] font-medium">Auth Service</span>
           </div>
+          <button 
+            onClick={() => onNavigate('leaves')}
+            className="w-full mt-2 py-2 bg-blue-50 text-blue-600 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-blue-100 transition-colors"
+          >
+            Review Requests
+          </button>
         </div>
       </div>
     </div>

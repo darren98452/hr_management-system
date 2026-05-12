@@ -6,12 +6,14 @@ import EmployeeList from './components/EmployeeList';
 import DepartmentList from './components/DepartmentList';
 import Attendance from './components/Attendance';
 import LeaveRequests from './components/LeaveRequests';
+import Profile from './components/Profile';
 import LoginPage from './components/LoginPage';
 import { Loader2 } from 'lucide-react';
 
 function AppContent() {
   const { user, loading } = useAuth();
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [showEmployeeAdd, setShowEmployeeAdd] = useState(false);
 
   if (loading) {
     return (
@@ -26,19 +28,35 @@ function AppContent() {
     return <LoginPage />;
   }
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setShowEmployeeAdd(false);
+  };
+
   const renderContent = () => {
     switch (activeTab) {
-      case 'dashboard': return <Dashboard onNavigate={setActiveTab} />;
-      case 'employees': return <EmployeeList />;
+      case 'dashboard': return (
+        <Dashboard 
+          onNavigate={handleTabChange} 
+          onAction={(action) => {
+            if (action === 'add-employee') {
+              setActiveTab('employees');
+              setShowEmployeeAdd(true);
+            }
+          }} 
+        />
+      );
+      case 'employees': return <EmployeeList defaultShowAdd={showEmployeeAdd} />;
       case 'departments': return <DepartmentList />;
       case 'attendance': return <Attendance />;
       case 'leaves': return <LeaveRequests />;
-      default: return <Dashboard onNavigate={setActiveTab} />;
+      case 'profile': return <Profile />;
+      default: return <Dashboard onNavigate={handleTabChange} onAction={() => {}} />;
     }
   };
 
   return (
-    <Layout activeTab={activeTab} setActiveTab={setActiveTab}>
+    <Layout activeTab={activeTab} setActiveTab={handleTabChange}>
       {renderContent()}
     </Layout>
   );
