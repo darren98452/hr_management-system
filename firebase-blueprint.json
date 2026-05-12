@@ -1,0 +1,92 @@
+{
+  "entities": {
+    "Employee": {
+      "title": "Employee",
+      "description": "Represents an employee in the organization",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "departmentId": { "type": "string" },
+        "role": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "inactive", "on-leave"] },
+        "joiningDate": { "type": "string", "format": "date-time" },
+        "profileImage": { "type": "string" },
+        "phoneNumber": { "type": "string" }
+      },
+      "required": ["name", "email", "departmentId", "role", "status"]
+    },
+    "Department": {
+      "title": "Department",
+      "description": "Organizational departments",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "headId": { "type": "string", "description": "Employee ID of the department head" }
+      },
+      "required": ["name"]
+    },
+    "Attendance": {
+      "title": "Attendance",
+      "description": "Daily attendance record",
+      "type": "object",
+      "properties": {
+        "employeeId": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "checkIn": { "type": "string", "format": "date-time" },
+        "checkOut": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["present", "absent", "late", "half-day"] }
+      },
+      "required": ["employeeId", "date", "status"]
+    },
+    "LeaveRequest": {
+      "title": "Leave Request",
+      "description": "Employee leave applications",
+      "type": "object",
+      "properties": {
+        "employeeId": { "type": "string" },
+        "type": { "type": "string", "enum": ["sick", "vacation", "emergency", "maternity", "paternity"] },
+        "startDate": { "type": "string", "format": "date-time" },
+        "endDate": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "reason": { "type": "string" },
+        "appliedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["employeeId", "type", "startDate", "endDate", "status"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Auth user profiles and roles",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "employee"] }
+      },
+      "required": ["uid", "email", "role"]
+    }
+  },
+  "firestore": {
+    "employees": {
+      "schema": "Employee",
+      "description": "Collection of all employees"
+    },
+    "departments": {
+      "schema": "Department",
+      "description": "Organizational departments"
+    },
+    "attendance": {
+      "schema": "Attendance",
+      "description": "Daily attendance logs"
+    },
+    "leave_requests": {
+      "schema": "LeaveRequest",
+      "description": "Workflow for leave applications"
+    },
+    "users": {
+      "schema": "User",
+      "description": "System users and their permissions"
+    }
+  }
+}
